@@ -1,0 +1,21 @@
+# Env
+.env
+*.local
+
+# Go
+backend/bin/
+backend/tmp/
+*.out
+
+# Node / Next.js
+node_modules/
+frontend/.next/
+frontend/out/
+frontend/coverage/
+frontend/playwright-report/
+frontend/test-results/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/

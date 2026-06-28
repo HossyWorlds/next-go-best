@@ -1,0 +1,31 @@
+# golangci-lint v2 設定。`go tool golangci-lint run` または `make lint-back` で実行。
+# 方針: 正確性・セキュリティ重視。スタイル(コメント必須等)の過剰検知は入れない。
+version: "2"
+
+linters:
+  default: standard # errcheck, govet, ineffassign, staticcheck, unused
+  enable:
+    - bodyclose # HTTPレスポンスボディのClose漏れ
+    - gosec # セキュリティ
+
+  settings:
+    gosec:
+      excludes:
+        # 以下はこの雛形では誤検知/設計上の意図的判断のため除外（理由を明記）。
+        - G115 # int->uint32 変換は len() 由来で実害なし（password.go）
+        - G124 # Cookie Secure は設定駆動（本番true/開発false）。HttpOnly+SameSiteは付与済み
+        - G706 # CLIツールの log.Fatalf にコマンド引数を含むのみ（migrate）
+
+  exclusions:
+    rules:
+      # テストではセキュリティ/エラーチェックを緩める。
+      - path: _test\.go
+        linters:
+          - gosec
+          - errcheck
+      # sqlc 生成コードは対象外。
+      - path: internal/db/gen/
+        linters:
+          - errcheck
+          - gosec
+          - staticcheck
